@@ -36,17 +36,16 @@ io.sockets.on('connection', function (socket) {
         users.push(pseudo);
         ///Envoie la liste des users au client
         io.emit('users', users)
-        console.log("voici les users :"+users)
+        console.log("voici les users :" + users)
         return users;
     })
     ///////////////////
     //récéption du chat
-    socket.on("chat", (data) => {
+    socket.on("chat", (msg, send) => {
         //socket.CEQUETUVEUX permet de stocker tout ce que tu veux LOL // un peu comme les this.state.SOMETHING / this.props.SOMETHING en reactJS
-
-        socket.chat = data;
-        //console.log("message = "+data)
-        io.emit("chat", data, socket.pseudo);
+        console.log(msg +" from "+ socket.pseudo +" to "+ send);
+        socket.chat = msg;
+        io.emit("chat", msg, socket.pseudo, send);
     })
     //console log le socket.client d'un client
     console.log("socket.id:");

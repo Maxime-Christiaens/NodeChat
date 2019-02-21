@@ -10,10 +10,6 @@
 
 <body>
     <h2 id="name">Hello Jeune Inconnu</h2>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia totam enim laboriosam tempora deleniti
-        blanditiis ea sint velit sequi soluta. Iure totam dolorum enim saepe placeat illum quis perspiciatis impedit.
-    </p>
-
     <p><input type="button" value="Embêter le serveur" id="poke" onclick="myFunction()" /></p>
     <form id="formuPseudo">
         <input type="text" id="pseudo">
@@ -21,7 +17,10 @@
     </form>
     <form id="form">
         <input type="text" id="chat">
-        <button>Want to chat ?</button>
+        <select id="send">
+            <option value="everyone">Everyone</option>
+        </select>
+        <button>envoyez le message</button>
     </form>
     <div id="willy"></div>
     <script src="/socket.io/socket.io.js"></script>
