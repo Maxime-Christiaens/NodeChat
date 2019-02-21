@@ -8,11 +8,13 @@ const url = require('url');
 
 const port = 5555;
 
+//contiendra tout les users
+let users = [];
+
 //permet de déclarer des fichiers statiques pour recherche plus facilement les ressources
 app.use(express.static(__dirname + '/node_modules/socket.io-client'));
 app.use(express.static(__dirname + '/'));
 app.get('/', (req, res) => res.sendFile(__dirname + "/view/index.html"));
-
 
 // Quand un client se connecte alors ...
 io.sockets.on('connection', function (socket) {
@@ -24,15 +26,20 @@ io.sockets.on('connection', function (socket) {
         console.log('Un client me parle ! Il me dit : ' + message);
     });
     socket.pseudo = "Inconnu"
+    /////////////////////////////////////////
     //regarde si la personne change de pseudo 
-    socket.on('pseudo', (data) => {
-        socket.pseudo = data;
+    socket.on('pseudo', (pseudo, clientID) => {
+        socket.pseudo = pseudo, clientID;
+        //envoi l'info du pseudo et de son ID au client
+        io.emit('pseudo', pseudo, clientID)
         ////****Incrémenter dans la base de données les pseudos */
-        io.emit('pseudo', data)
-        //envoi l'info du pseudo au client
- 
+        users.push(pseudo);
+        ///Envoie la liste des users au client
+        io.emit('users', users)
+        console.log("voici les users :"+users)
+        return users;
     })
-    //récéption 
+    ///////////////////
     //récéption du chat
     socket.on("chat", (data) => {
         //socket.CEQUETUVEUX permet de stocker tout ce que tu veux LOL // un peu comme les this.state.SOMETHING / this.props.SOMETHING en reactJS
@@ -41,7 +48,8 @@ io.sockets.on('connection', function (socket) {
         //console.log("message = "+data)
         io.emit("chat", data, socket.pseudo);
     })
-
+    //console log le socket.client d'un client
+    console.log("socket.id:");
 });
 
 http.listen(port, function () {
