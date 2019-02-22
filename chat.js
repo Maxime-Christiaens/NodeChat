@@ -29,19 +29,26 @@ socket.on("pseudo", function(pseudo, ID){
     //l'option contient le pseudo en texte
     option.innerText = pseudo;
     //l'option contient l'id de la personne en value
-    option.value = ID;
-    //crée un enfant à willy (la div)
-    
+    option.value = ID
+
+    //crée l'option uniquement si ce n'est pas son pseudo, sinon on pourrait s'envoyer un message à soi-même ce qui ne sert pas à grand chose :3 
     if (ID != socket.id){
-        //crée l'option uniquement si ce n'est pas son pseudo, sinon on pourrait s'envoyer un message à soi-même ce qui ne sert pas à grand chose :3 
-        send.appendChild(option)
+        let toCreat = true;
+        //permet de modifier son pseudo et d'éviter qu'il se crée plusieurs fois 
+        for (let i = 0; i < document.querySelectorAll("option").length; i++){
+            if (document.querySelectorAll("option")[i].value == ID){
+                document.querySelectorAll("option")[i].innerText = pseudo
+                toCreat = false // désactive la création du pseudo car il existe déjà
+            }
+        }   
+        if(toCreat){
+            send.appendChild(option)
+        } 
     }
     //si l'id récupérer est égale à l'id du client alors il l'affiche en modifiant le texte de l'html mais uniquement du bon client
     if (ID == socket.id){
         name.innerText = ("Hello " + pseudo)
     }
-    
-
 })
 
 formu.addEventListener("submit",function(e){
@@ -59,10 +66,10 @@ socket.on("chat", function(msg, pseudo, send){
     let now = new Date();
     //écrit dans la paragraphe le pseudo l'heure et le message
     if (send == "everyone"){
-        p.innerText = pseudo+" : "+now.getHours()+"h"+now.getMinutes()+" : "+msg+"send to : "+ send;
+        p.innerText = pseudo+" : "+now.getHours()+"h"+now.getMinutes()+" : "+msg;
     }
     else if (send == socket.id){
-        p.innerText = pseudo+" : "+now.getHours()+"h"+now.getMinutes()+" : "+msg+"send to : "+ send;
+        p.innerText = "Whisper : from "+pseudo+" : "+now.getHours()+"h"+now.getMinutes()+" : "+msg;
     }  
     //crée un enfant à willy (la div)
     willy.appendChild(p)
